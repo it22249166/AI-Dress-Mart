@@ -83,4 +83,9 @@ export const CartProvider = ({ children }) => {
         getItemCount,
     };
 
-    return { children };
+    return (
+        <CartContext.Provider value={value}>
+            {children}
+        </CartContext.Provider>
+    );
+};

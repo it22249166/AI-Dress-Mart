@@ -17,23 +17,21 @@ import Profile from './pages/Profile';
 import Header from './components/Header';
 
 function App() {
-    return (
-    
-      
-        
-        
-          } />
-          } />
-          } />
-          } />
-          } />
-          } />
-          } />
-          } />
-        
-        
-      
-    
+  return (
+    <Router>
+      <Header />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/shop" element={<Shop />} />
+        <Route path="/product/:id" element={<ProductDetails />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/profile" element={<Profile />} />
+      </Routes>
+      <ToastContainer position="top-right" autoClose={3000} />
+    </Router>
   );
 }
 

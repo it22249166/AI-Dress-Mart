@@ -20,6 +20,7 @@ const Shop = () => {
 
     useEffect(() => {
         fetchProducts();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filters]);
 
     const fetchProducts = async () => {
@@ -49,76 +50,65 @@ const Shop = () => {
     };
 
     return (
+        <div className="shop-page space-y-8">
+            {/* Page Title */}
+            <h1 className="text-3xl font-bold text-center">Shop All Dresses</h1>
 
+            {/* Search and Filter Bar */}
+            <div className="flex flex-col md:flex-row items-center gap-4">
+                <form onSubmit={handleSearch} className="relative flex-1">
+                    <Search className="absolute left-3 top-3 text-gray-400" />
+                    <input
+                        type="text"
+                        placeholder="Search by name, color, or style..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full pl-12 pr-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-600 focus:outline-none"
+                    />
+                </form>
 
-        Shop All Dresses
+                <button
+                    type="button"
+                    onClick={() => setShowFilters(!showFilters)}
+                    className="btn-secondary flex items-center gap-2 px-4 py-2"
+                >
+                    <Filter size={18} />
+                    Filters
+                </button>
+            </div>
 
-    {/* Search and Filter Bar */ }
+            {/* Filters Panel */}
+            {showFilters && (
+                <Filters
+                    filters={filters}
+                    setFilters={setFilters}
+                    onClose={() => setShowFilters(false)}
+                />
+            )}
 
+            {/* Products Grid */}
+            {loading ? (
+                <p className="text-center text-gray-500">Loading dresses...</p>
+            ) : products.length > 0 ? (
+                <>
+                    <p className="text-gray-600">{products.length} dresses found</p>
+                    <div className="grid md:grid-cols-3 gap-6 mt-4">
+                        {products.map((product) => (
+                            <ProductCard key={product._id} product={product} />
+                        ))}
+                    </div>
+                </>
+            ) : (
+                <p className="text-center text-gray-500">
+                    No dresses found. <br />
+                    Try adjusting your filters or search query.
+                </p>
+            )}
 
-
-
-    <input
-        type="text"
-        placeholder="Search by name, color, or style..."
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        className="w-full pl-12 pr-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-600 focus:outline-none"
-    />
-
-
-    Search
-
-        < button
-    type = "button"
-    onClick = {() => setShowFilters(!showFilters)}
-className = "btn-secondary flex items-center gap-2"
-    >
-
-    Filters
-
-
-
-{/* Filters Panel */ }
-{
-    showFilters && (
-        <Filters
-            filters={filters}
-            setFilters={setFilters}
-            onClose={() => setShowFilters(false)}
-        />
-    )
-}
-
-
-{/* Products Grid */ }
-{
-    loading ? (
-
-
-        Loading dresses...
-          
-        ) : products.length > 0 ? (
-        <>
-            {products.length} dresses found
-
-            {products.map((product) => (
-                
-              ))}
-
-        </>
-    ) : (
-
-        No dresses found
-            Try adjusting your filters or search query
-          
-        )
-}
-      
-
-      
-    
-  );
+            {/* Chatbot */}
+            <ChatBot />
+        </div>
+    );
 };
 
 export default Shop;
