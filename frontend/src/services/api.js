@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001/api';
 
 // Create axios instance
 const api = axios.create({
@@ -8,6 +8,7 @@ const api = axios.create({
     headers: {
         'Content-Type': 'application/json',
     },
+    withCredentials: true, // include credentials for CORS requests
 });
 
 // Add token to requests
@@ -19,13 +20,21 @@ api.interceptors.request.use(
         }
         return config;
     },
-    (error) => {
-        return Promise.reject(error);
-    }
+    (error) => Promise.reject(error)
 );
 
 // Auth APIs
-export const register = (userData) => api.post('/auth/register', userData);
+export const register = async (userData) => {
+  try {
+    const response = await axios.post(`${API_URL}/auth/register`, userData, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Registration error:', error);
+    throw error;
+  }
+};
 export const login = (userData) => api.post('/auth/login', userData);
 export const getMe = () => api.get('/auth/me');
 

@@ -24,26 +24,30 @@ const Shop = () => {
     }, [filters]);
 
     const fetchProducts = async () => {
-        setLoading(true);
-        try {
-            const params = {
-                ...(filters.category !== 'all' && { category: filters.category }),
-                ...(filters.size !== 'all' && { size: filters.size }),
-                minPrice: filters.minPrice,
-                maxPrice: filters.maxPrice,
-                ...(filters.sort && { sort: filters.sort }),
-                ...(searchQuery && { search: searchQuery })
-            };
-
-            const { data } = await getProducts(params);
-            setProducts(data.data);
-        } catch (error) {
-            console.error('Error fetching products:', error);
-        } finally {
-            setLoading(false);
-        }
+  setLoading(true);
+  try {
+    const params = {
+      ...(filters.category !== 'all' && { category: filters.category }),
+      ...(filters.size !== 'all' && { size: filters.size }),
+      minPrice: filters.minPrice,
+      maxPrice: filters.maxPrice,
+      ...(filters.sort && { sort: filters.sort }),
+      ...(searchQuery && { search: searchQuery })
     };
 
+    const { data } = await getProducts(params);
+
+    // Always ensure products is an array
+    const safeProducts = (data && Array.isArray(data.data)) ? data.data : [];
+    setProducts(safeProducts);
+
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    setProducts([]); // fallback if API fails
+  } finally {
+    setLoading(false);
+  }
+};
     const handleSearch = (e) => {
         e.preventDefault();
         fetchProducts();
@@ -51,10 +55,8 @@ const Shop = () => {
 
     return (
         <div className="shop-page space-y-8">
-            {/* Page Title */}
             <h1 className="text-3xl font-bold text-center">Shop All Dresses</h1>
 
-            {/* Search and Filter Bar */}
             <div className="flex flex-col md:flex-row items-center gap-4">
                 <form onSubmit={handleSearch} className="relative flex-1">
                     <Search className="absolute left-3 top-3 text-gray-400" />
@@ -77,7 +79,6 @@ const Shop = () => {
                 </button>
             </div>
 
-            {/* Filters Panel */}
             {showFilters && (
                 <Filters
                     filters={filters}
@@ -86,10 +87,9 @@ const Shop = () => {
                 />
             )}
 
-            {/* Products Grid */}
             {loading ? (
                 <p className="text-center text-gray-500">Loading dresses...</p>
-            ) : products.length > 0 ? (
+            ) : (products && products.length > 0 ? (
                 <>
                     <p className="text-gray-600">{products.length} dresses found</p>
                     <div className="grid md:grid-cols-3 gap-6 mt-4">
@@ -103,9 +103,8 @@ const Shop = () => {
                     No dresses found. <br />
                     Try adjusting your filters or search query.
                 </p>
-            )}
+            ))}
 
-            {/* Chatbot */}
             <ChatBot />
         </div>
     );

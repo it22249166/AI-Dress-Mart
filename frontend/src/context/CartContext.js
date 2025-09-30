@@ -14,13 +14,19 @@ export const useCart = () => {
 export const CartProvider = ({ children }) => {
     const [cart, setCart] = useState([]);
 
+    // Load cart from localStorage
     useEffect(() => {
         const savedCart = localStorage.getItem('cart');
         if (savedCart) {
-            setCart(JSON.parse(savedCart));
+            try {
+                setCart(JSON.parse(savedCart));
+            } catch {
+                setCart([]);
+            }
         }
     }, []);
 
+    // Save cart to localStorage
     useEffect(() => {
         localStorage.setItem('cart', JSON.stringify(cart));
     }, [cart]);
@@ -49,7 +55,7 @@ export const CartProvider = ({ children }) => {
     };
 
     const updateQuantity = (productId, size, quantity) => {
-        if (quantity === 0) {
+        if (quantity <= 0) {
             removeFromCart(productId, size);
         } else {
             setCart(cart.map(item =>
@@ -65,13 +71,8 @@ export const CartProvider = ({ children }) => {
         toast.success('Cart cleared');
     };
 
-    const getTotal = () => {
-        return cart.reduce((total, item) => total + item.price * item.quantity, 0);
-    };
-
-    const getItemCount = () => {
-        return cart.reduce((count, item) => count + item.quantity, 0);
-    };
+    const getTotal = () => cart.reduce((total, item) => total + item.price * item.quantity, 0);
+    const getItemCount = () => cart.reduce((count, item) => count + item.quantity, 0);
 
     const value = {
         cart,

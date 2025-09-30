@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { toast } from 'react-toastify';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -24,38 +25,41 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Client-side validation
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
       return;
     }
-
     if (formData.password.length < 6) {
       setError('Password must be at least 6 characters');
       return;
     }
 
     setLoading(true);
+    setError('');
 
-    const success = await register(
-      formData.name,
-      formData.email,
-      formData.password
-    );
+    try {
+      const success = await register(formData.name, formData.email, formData.password);
 
-    if (success) {
-      navigate('/');
+      if (success) {
+        toast.success('Registration successful!');
+        navigate('/');
+      } else {
+        setError('Registration failed. Please try again.');
+      }
+    } catch (err) {
+      console.error(err);
+      setError(err.message || 'Something went wrong during registration');
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
     <div className="register-page flex justify-center items-center min-h-screen bg-gray-50">
       <div className="w-full max-w-md bg-white shadow-lg rounded-lg p-8">
         <h2 className="text-2xl font-bold text-center mb-2">Create Account</h2>
-        <p className="text-center text-gray-600 mb-6">
-          Join AI Dress Mart today
-        </p>
+        <p className="text-center text-gray-600 mb-6">Join AI Dress Mart today</p>
 
         {error && (
           <div className="mb-4 p-2 text-sm text-red-700 bg-red-100 rounded">
@@ -64,14 +68,8 @@ const Register = () => {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Full Name */}
           <div>
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Full Name
-            </label>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700">Full Name</label>
             <input
               type="text"
               name="name"
@@ -83,14 +81,8 @@ const Register = () => {
             />
           </div>
 
-          {/* Email */}
           <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Email
-            </label>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
             <input
               type="email"
               name="email"
@@ -102,14 +94,8 @@ const Register = () => {
             />
           </div>
 
-          {/* Password */}
           <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Password
-            </label>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
             <input
               type="password"
               name="password"
@@ -121,14 +107,8 @@ const Register = () => {
             />
           </div>
 
-          {/* Confirm Password */}
           <div>
-            <label
-              htmlFor="confirmPassword"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Confirm Password
-            </label>
+            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">Confirm Password</label>
             <input
               type="password"
               name="confirmPassword"
@@ -140,7 +120,6 @@ const Register = () => {
             />
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             disabled={loading}

@@ -12,6 +12,7 @@ const ProductCard = ({ product }) => {
         e.stopPropagation();
         if (product.sizes && product.sizes.length > 0) {
             addToCart(product, product.sizes[0]);
+            toast.success(`${product.name} added to cart!`);
         } else {
             toast.error('Please select a size');
         }
@@ -20,55 +21,72 @@ const ProductCard = ({ product }) => {
     return (
         <div
             onClick={() => navigate(`/product/${product._id}`)}
-            className="card cursor-pointer group"
+            className="card cursor-pointer group border rounded-lg overflow-hidden shadow hover:shadow-lg transition"
         >
+            {/* Product Image */}
+            <div className="relative w-full h-64 bg-gray-100 flex items-center justify-center">
+                {product.images && product.images[0] ? (
+                    <img
+                        src={product.images[0].url}
+                        alt={product.name}
+                        className="object-cover w-full h-full"
+                    />
+                ) : (
+                    <span className="text-6xl">👗</span>
+                )}
 
-            {product.images && product.images[0] ? (
+                {/* Badges */}
+                {product.isNewArrival && (
+                    <span className="absolute top-2 left-2 bg-green-500 text-white px-2 py-1 text-xs rounded">
+                        New
+                    </span>
+                )}
+                {product.isFeatured && (
+                    <span className="absolute top-2 right-2 bg-purple-600 text-white px-2 py-1 text-xs rounded">
+                        Featured
+                    </span>
+                )}
+            </div>
 
-            ): (
-          
-            👗
-          
-        )}
-            {product.isNewArrival && (
+            {/* Product Info */}
+            <div className="p-4 flex flex-col gap-2">
+                <h2 className="font-semibold text-lg">{product.name}</h2>
+                <p className="text-gray-600 text-sm">{product.description}</p>
 
-                New
+                {/* Rating */}
+                <div className="flex items-center gap-1 text-yellow-500">
+                    <Star size={16} />
+                    <span>{product.rating}</span>
+                    <span className="text-gray-500 text-sm">({product.numReviews} reviews)</span>
+                </div>
 
-            )}
-            {product.isFeatured && (
+                {/* Price */}
+                <div className="font-bold text-purple-600 text-lg">${product.price}</div>
 
-                Featured
+                {/* Sizes */}
+                {product.sizes && product.sizes.length > 0 && (
+                    <div className="flex gap-2 mt-2">
+                        {product.sizes.slice(0, 4).map((size, index) => (
+                            <span
+                                key={index}
+                                className="border px-2 py-1 text-sm rounded hover:bg-purple-600 hover:text-white transition"
+                            >
+                                {size}
+                            </span>
+                        ))}
+                    </div>
+                )}
 
-            )}
-
-
-
-            {product.name}
-            {product.description}
-
-
-
-            {product.rating}
-            ({product.numReviews} reviews)
-
-
-
-            ${product.price}
-
-
-
-
-
-
-            {product.sizes && product.sizes.slice(0, 4).map((size, index) => (
-
-                { size }
-
-            ))}
-
-
-
-            );
+                {/* Add to Cart */}
+                <button
+                    onClick={handleAddToCart}
+                    className="mt-4 w-full bg-purple-600 text-white py-2 rounded hover:bg-purple-700 transition flex items-center justify-center gap-2"
+                >
+                    <ShoppingCart size={16} /> Add to Cart
+                </button>
+            </div>
+        </div>
+    );
 };
 
-            export default ProductCard;
+export default ProductCard;
