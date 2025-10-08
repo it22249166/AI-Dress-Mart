@@ -209,32 +209,41 @@ const Product = require('../models/Product');
 // @desc Get all products with filters and search
 // @route GET /api/products
 // @access Public
+// const getProducts = async (req, res) => {
+//   try {
+//     const { category, minPrice, maxPrice, size, search, sort } = req.query;
+
+//     let query = {};
+
+//     if (category && category !== 'all') query.category = category;
+//     if (size && size !== 'all') query.sizes = size;
+//     if (minPrice || maxPrice) query.price = {};
+//     if (minPrice) query.price.$gte = Number(minPrice);
+//     if (maxPrice) query.price.$lte = Number(maxPrice);
+//     if (search) query.$or = [
+//       { name: { $regex: search, $options: 'i' } },
+//       { description: { $regex: search, $options: 'i' } }
+//     ];
+
+//     let productsQuery = Product.find(query);
+
+//     if (sort === 'price-asc') productsQuery = productsQuery.sort({ price: 1 });
+//     else if (sort === 'price-desc') productsQuery = productsQuery.sort({ price: -1 });
+//     else if (sort === 'rating') productsQuery = productsQuery.sort({ rating: -1 });
+//     else productsQuery = productsQuery.sort({ createdAt: -1 });
+
+//     const products = await productsQuery;
+
+//     res.json({ success: true, data: products });
+//   } catch (error) {
+//     res.status(500).json({ success: false, message: error.message });
+//   }
+// };
+
 const getProducts = async (req, res) => {
   try {
-    const { category, minPrice, maxPrice, size, search, sort } = req.query;
-
-    let query = {};
-
-    if (category && category !== 'all') query.category = category;
-    if (size && size !== 'all') query.sizes = size;
-    if (minPrice || maxPrice) query.price = {};
-    if (minPrice) query.price.$gte = Number(minPrice);
-    if (maxPrice) query.price.$lte = Number(maxPrice);
-    if (search) query.$or = [
-      { name: { $regex: search, $options: 'i' } },
-      { description: { $regex: search, $options: 'i' } }
-    ];
-
-    let productsQuery = Product.find(query);
-
-    if (sort === 'price-asc') productsQuery = productsQuery.sort({ price: 1 });
-    else if (sort === 'price-desc') productsQuery = productsQuery.sort({ price: -1 });
-    else if (sort === 'rating') productsQuery = productsQuery.sort({ rating: -1 });
-    else productsQuery = productsQuery.sort({ createdAt: -1 });
-
-    const products = await productsQuery;
-
-    res.json({ success: true, data: products });
+    const products = await Product.find({});
+    res.json({ success: true, data: products }); // always return { success, data }
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
