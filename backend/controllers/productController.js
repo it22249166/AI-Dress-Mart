@@ -204,7 +204,7 @@
 
 // module.exports = { getProducts, getProduct, createProduct, updateProduct, deleteProduct };
 
-const Product = require('../models/Product');
+
 
 // @desc Get all products with filters and search
 // @route GET /api/products
@@ -239,7 +239,7 @@ const Product = require('../models/Product');
 //     res.status(500).json({ success: false, message: error.message });
 //   }
 // };
-
+const Product = require('../models/Product');
 const getProducts = async (req, res) => {
   try {
     const products = await Product.find({});
