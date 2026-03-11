@@ -166,6 +166,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Trash2, Plus, Minus, ShoppingBag, ArrowRight } from 'lucide-react'; // Added ArrowRight
 import { useCart } from '../context/CartContext';
+import { getProductImageUrl } from '../utils/productImages';
 
 const Cart = () => {
     const navigate = useNavigate();
@@ -201,14 +202,17 @@ const Cart = () => {
     }
 
     // Cart Item Component (Refactored for cleaner JSX)
-    const CartItem = ({ item }) => (
+    const CartItem = ({ item }) => {
+        const imageUrl = getProductImageUrl(item);
+
+        return (
         <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition duration-300 p-4 sm:p-6 border border-gray-100">
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-start">
                 {/* Product Image */}
                 <div className="w-24 h-24 sm:w-32 sm:h-32 flex-shrink-0">
-                    {item.images && item.images[0] ? (
+                    {imageUrl ? (
                         <img
-                            src={item.images[0].url}
+                            src={imageUrl}
                             alt={item.name}
                             className="w-full h-full object-cover rounded-lg border border-gray-200"
                         />
@@ -270,6 +274,7 @@ const Cart = () => {
             </div>
         </div>
     );
+    };
 
     return (
         <div className="min-h-screen bg-gray-50 py-12">

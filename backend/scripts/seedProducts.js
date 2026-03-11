@@ -26,7 +26,7 @@ const products = [
         sizes: ["S", "M", "L"],
         stock: 10,
         isNewArrival: true,
-        images: [{ url: "https://via.placeholder.com/300", public_id: "casual1" }]
+        images: [{ url: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=80", public_id: "casual1" }]
     },
     {
         name: "Evening Gown",
@@ -36,7 +36,7 @@ const products = [
         sizes: ["M", "L"],
         stock: 5,
         isFeatured: true,
-        images: [{ url: "https://via.placeholder.com/300", public_id: "evening1" }]
+        images: [{ url: "https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&w=900&q=80", public_id: "evening1" }]
     },
     {
         name: "Cocktail Dress",
@@ -45,7 +45,7 @@ const products = [
         category: "cocktail",
         sizes: ["S", "M", "L"],
         stock: 8,
-        images: [{ url: "https://via.placeholder.com/300", public_id: "cocktail1" }]
+        images: [{ url: "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=900&q=80", public_id: "cocktail1" }]
     }
 ];
 
