@@ -186,7 +186,7 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { createOrder } from '../services/api';
 import { toast } from 'react-toastify';
-import { Truck, CreditCard, MapPin, Loader2, ShoppingBag } from 'lucide-react';
+import { CreditCard, MapPin, Loader2, ShoppingBag } from 'lucide-react';
 
 const Checkout = () => {
     const navigate = useNavigate();
