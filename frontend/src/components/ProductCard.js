@@ -1,17 +1,24 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ShoppingCart, Star } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { toast } from 'react-toastify';
+import { getProductImageUrl } from '../utils/productImages';
 
 const ProductCard = ({ product }) => {
     const navigate = useNavigate();
     const { addToCart } = useCart();
+    const imageUrl = getProductImageUrl(product);
+    const [selectedSize, setSelectedSize] = useState(product.sizes?.[0] || '');
+
+    useEffect(() => {
+        setSelectedSize(product.sizes?.[0] || '');
+    }, [product]);
 
     const handleAddToCart = (e) => {
         e.stopPropagation();
-        if (product.sizes && product.sizes.length > 0) {
-            addToCart(product, product.sizes[0]);
+        if (selectedSize) {
+            addToCart(product, selectedSize);
             toast.success(`${product.name} added to cart!`);
         } else {
             toast.error('Please select a size');
@@ -25,9 +32,9 @@ const ProductCard = ({ product }) => {
         >
             {/* Product Image */}
             <div className="relative w-full h-64 bg-gray-100 flex items-center justify-center">
-                {product.images && product.images[0] ? (
+                {imageUrl ? (
                     <img
-                        src={product.images[0].url}
+                        src={imageUrl}
                         alt={product.name}
                         className="object-cover w-full h-full"
                     />
@@ -65,15 +72,22 @@ const ProductCard = ({ product }) => {
 
                 {/* Sizes */}
                 {product.sizes && product.sizes.length > 0 && (
-                    <div className="flex gap-2 mt-2">
-                        {product.sizes.slice(0, 4).map((size, index) => (
-                            <span
-                                key={index}
-                                className="border px-2 py-1 text-sm rounded hover:bg-purple-600 hover:text-white transition"
-                            >
-                                {size}
-                            </span>
-                        ))}
+                    <div className="mt-2">
+                        <label className="mb-1 block text-sm font-medium text-gray-700">
+                            Size
+                        </label>
+                        <select
+                            value={selectedSize}
+                            onChange={(e) => setSelectedSize(e.target.value)}
+                            onClick={(e) => e.stopPropagation()}
+                            className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-purple-600 focus:outline-none"
+                        >
+                            {product.sizes.map((size) => (
+                                <option key={size} value={size}>
+                                    {size}
+                                </option>
+                            ))}
+                        </select>
                     </div>
                 )}
 
